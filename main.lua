@@ -2,6 +2,12 @@ local Players = game:GetService("Players")
 
 local debounce = false
 
+local canGive = false
+
+local tool = game.ReplicatedStorage:FindFirstChild("HyperlaserGun")
+
+local player = script.Parent.Parent.Parent.Parent
+
 function onEntered(enterPressed)
 	if debounce == false then
 		if game.Players:FindFirstChild(script.Parent.FreezePlayer.Text) then
@@ -30,7 +36,7 @@ function sound()
 		wait(freeze.TimeLength) 
 		freeze:Destroy()
 	end) )
-end 
+end
 
 local function fired2()
 	script.Parent.FreezeAllPlayers.Text = "INITALIZING..."
@@ -45,6 +51,8 @@ local function fired2()
 	wait(3)
 	script.Parent.FreezeAllPlayers.Text = "Fired.."
 	sound()
+	wait(1.5)
+	script.Parent.FreezeAllPlayers.Text = "FREEZE ALL PLAYERS"
 end
 
 local function fired()
@@ -53,6 +61,7 @@ local function fired()
 		fired2() 
 	end)
 end
+
 function notonEntered(enterPressed)
 	if debounce == false then
 		if game.Players:FindFirstChild(script.Parent.UnfreezePlayer.Text) then
@@ -81,6 +90,8 @@ local function unfired2()
 	end
 	wait(3)
 	script.Parent.UnFreezeAllPlayers.Text = "Fired.."
+	wait(1.5)
+	script.Parent.UnFreezeAllPlayers.Text = "UNFREEZE ALL PLAYERS"
 end
 
 local function unfired()
@@ -88,33 +99,36 @@ local function unfired()
 	script.Parent.UnFreezeAllPlayers.MouseButton1Down:Connect(function(click)
 		unfired2() 
 	end)
-end
+end 
+
 
 local function item()
 	if canGive == false then
 		canGive = true
 		for v = 1, tonumber(script.Parent.UserInput.Text), 1 do
-			local clone = game.ReplicatedStorage.HyperlaserGun:Clone()
-			clone.Parent = script.Parent.Parent.Parent.Parent.Backpack 
+			local clone = tool:Clone()
+			clone.Parent = player.Backpack 
 		end
 		wait(1)
 		canGive = false
 	end
 end
 
-
 local function prompt()
 	script.Parent.UserInput.Text = "Please input a number here for many laser guns"
-	script.Parent.UserInput.FocusLost:Connect(function(lost)
+	script.Parent.UserInput.FocusLost:Connect(function(player)
 		item()
 	end)
 end 
 
+script.Parent.Gun.MouseButton1Down:Connect(function(player)
+	prompt()
+end) 
+
 script.Parent.FreezeAllPlayers.MouseButton1Down:Connect(fired)
 script.Parent.UnFreezeAllPlayers.MouseButton1Down:Connect(unfired)
 script.Parent.FreezePlayer.FocusLost:Connect(onEntered) 
-script.Parent.UnfreezePlayer.FocusLost:Connect(notonEntered) 
-script.Parent.Gun.MouseButton1Down:Connect(prompt)  
+script.Parent.UnfreezePlayer.FocusLost:Connect(notonEntered)  
 
 -- Exit and Enter 
 function exitandenter()
