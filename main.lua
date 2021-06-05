@@ -69,3 +69,12 @@ script.Parent.FreezePlayer.FocusLost:Connect(onEntered)
 script.Parent.Gun.MouseButton1Down:Connect(prompt)
 
 -- Exit and Enter 
+function exitandenter()
+	if script.Parent.Parent.Parent.Frame.Visible == false then
+		script.Parent.Parent.Parent.Frame.Visible = true
+	else
+		script.Parent.Parent.Parent.Frame.Visible = false 
+	end
+end
+
+script.Parent.MouseButton1Down:Connect(exitandenter) 
