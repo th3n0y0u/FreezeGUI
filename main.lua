@@ -91,11 +91,17 @@ local function unfired()
 end
 
 local function item()
-	for v = 1, tonumber(script.Parent.UserInput.Text), 1 do
-		local tool = game.ReplicatedStorage.HyperlaserGun:Clone()
-		tool.Parent = script.Parent.Parent.Parent.Parent.Backpack 
+	if canGive == false then
+		canGive = true
+		for v = 1, tonumber(script.Parent.UserInput.Text), 1 do
+			local clone = game.ReplicatedStorage.HyperlaserGun:Clone()
+			clone.Parent = script.Parent.Parent.Parent.Parent.Backpack 
+		end
+		wait(1)
+		canGive = false
 	end
 end
+
 
 local function prompt()
 	script.Parent.UserInput.Text = "Please input a number here for many laser guns"
