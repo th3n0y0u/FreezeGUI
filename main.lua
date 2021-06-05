@@ -21,13 +21,16 @@ end
 
 function sound()
 	local freeze = Instance.new("Sound")
+	freeze.Name = "FreezeSound"
 	freeze.SoundId = "rbxassetid://2364677393" 
+	freeze.PlaybackSpeed = 1
 	freeze.Volume = 1
-	freeze.Parent = game.Workspace
-	freeze.Playing = true
-	wait(freeze.TimeLength) 
-	freeze:Destroy()
-end
+	freeze:Play()
+	coroutine.resume(coroutine.create(function()
+		wait(freeze.TimeLength) 
+		freeze:Destroy()
+	end) )
+end 
 
 local function fired2()
 	script.Parent.FreezeAllPlayers.Text = "INITALIZING..."
@@ -50,6 +53,43 @@ local function fired()
 		fired2() 
 	end)
 end
+function notonEntered(enterPressed)
+	if debounce == false then
+		if game.Players:FindFirstChild(script.Parent.UnfreezePlayer.Text) then
+			local target = game.Players:FindFirstChild(script.Parent.UnfreezePlayer.Text)
+			if target.Character ~= nil then
+				if target ~= script.Parent.Parent.Name then
+					target.Character.HumanoidRootPart.Anchored = false
+				else
+					print("stop unfreezing yourself nerd")
+				end
+			else
+				print("stop it")
+			end
+		end
+	end
+end
+local function unfired2()
+	script.Parent.UnFreezeAllPlayers.Text = "INITALIZING..."
+	wait(3)
+	for i, player in pairs(Players:GetPlayers()) do
+		if player.Name ~= script.Parent.Parent.Name then
+			player.Character.HumanoidRootPart.Anchored = false
+		else
+			print("No unfreezing yourself.")
+		end
+	end
+	wait(3)
+	script.Parent.UnFreezeAllPlayers.Text = "Fired.."
+end
+
+local function unfired()
+	script.Parent.UnFreezeAllPlayers.Text = "Are you sure that you want to do this?"
+	script.Parent.UnFreezeAllPlayers.MouseButton1Down:Connect(function(click)
+		unfired2() 
+	end)
+end
+
 local function item()
 	for v = 1, tonumber(script.Parent.UserInput.Text), 1 do
 		local tool = game.ReplicatedStorage.HyperlaserGun:Clone()
@@ -65,8 +105,10 @@ local function prompt()
 end 
 
 script.Parent.FreezeAllPlayers.MouseButton1Down:Connect(fired)
+script.Parent.UnFreezeAllPlayers.MouseButton1Down:Connect(unfired)
 script.Parent.FreezePlayer.FocusLost:Connect(onEntered) 
-script.Parent.Gun.MouseButton1Down:Connect(prompt)
+script.Parent.UnfreezePlayer.FocusLost:Connect(notonEntered) 
+script.Parent.Gun.MouseButton1Down:Connect(prompt)  
 
 -- Exit and Enter 
 function exitandenter()
